@@ -16,6 +16,9 @@ def new_prescription(request):
         form = OrderForm(request.POST)
         if form.is_valid():
             order = form.save()
+        else:
+            return render_to_response('orders/new.html', {
+            'form': form, },context_instance=RequestContext(request))
         return render_to_response('orders/index.html') # Redirect after POST
     else:
         form = OrderForm() # An unbound form
