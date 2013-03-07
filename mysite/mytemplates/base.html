@@ -64,25 +64,7 @@
         </div>
       </div>
     </div>
-    
-    {% if user.is_authenticated %}
-    
-    <div class="container">
 
-    {% if error %}
-        <p style="color: red;">Please submit a search term.</p>
-    {% endif %}
-    
-    <form action="/search/" method="get" class="form-search">
-        <div class="input-append">
-            <input type="text" class="span2 search-query" name="q">
-            <button type="submit" class="btn">Search</button>
-        </div>
-    </form>
-    
-    </div>
-    
-    {% endif %}
     
     <div class="container">
 
