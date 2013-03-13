@@ -11,5 +11,5 @@ urlpatterns = patterns('',
     #url(r'^orders/', include('orders.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^new/', 'orders.views.new_prescription'),
-    url(r'^confirm/', 'orders.views.confirm_order'), 
+    url(r'^choose/', 'orders.views.choose_location'), 
 )

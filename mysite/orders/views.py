@@ -6,7 +6,6 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.http import HttpResponseRedirect
-# from orders.forms import OrderCreateForm
 from twilio.rest import TwilioRestClient
 from googlemaps import GoogleMaps
 import simplejson, urllib
@@ -21,9 +20,9 @@ def new_prescription(request):
         form = OrderForm(request.POST)
         if form.is_valid():
             order = form.save()
-            confirm_order(order)
             (places, lat, lng)=show_nearby(order)
-            return render_to_response('orders/confirm.html', {'places': places, 'lat': lat, 'lng': lng})
+            
+            return render_to_response('orders/choose.html', {'form': form, 'places': places, 'lat': lat, 'lng': lng})
         else:
             return render_to_response('orders/new.html', {
             'form': form, },context_instance=RequestContext(request))
@@ -35,20 +34,28 @@ def new_prescription(request):
     return render_to_response('orders/new.html', {
             'form': form, },context_instance=RequestContext(request))
             
-def confirm_order(order):
+def choose_location(request):
+    
+    
     # Find these values at https://twilio.com/user/account
     account_sid = "AC4f13c39e2e5b0cf1fd1017be8fd944a7"
     auth_token = "423fb88dee17931cdb345671ed665069"
     client = TwilioRestClient(account_sid, auth_token)
- 
+    
+    
+    return HttpResponse(request.GET.lists())
+    
     #message = client.sms.messages.create(to=order.phone_number, from_="+19173380736", body=order.medication)
+    #return render_to_response('orders/confirm.html', {'form': form, 'places': places, 'lat': lat, 'lng': lng})
     
 def show_nearby(order):
 
-    key = 'AIzaSyBy81o-nlJ4RE6zuRwUaq87DZti5sK2f50'
+    key = 'AIzaSyBOebFrowSFSnB7V4zeNGagd9hTG4ydq8M'
     gmaps = GoogleMaps(key)
     address = order.zipcode
-    lat, lng = gmaps.address_to_latlng(address)
+    lat, lng= (40.337904,-74.587335)
+    #lat, lng = gmaps.address_to_latlng(address)
+    
     radius = '5000'
 
     URL = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=' + str(lat) + ',' + str(lng) + '&radius=' + radius + '&types=pharmacy&sensor=false&key=' + key
