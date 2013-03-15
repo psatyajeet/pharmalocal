@@ -8,6 +8,7 @@ from django.contrib.auth import logout
 from django.http import HttpResponseRedirect
 from twilio.rest import TwilioRestClient
 from googlemaps import GoogleMaps
+from pygeocoder import Geocoder
 import simplejson, urllib
 
 import requests
@@ -54,6 +55,7 @@ def show_nearby(order):
     gmaps = GoogleMaps(key)
     address = order.zipcode
     lat, lng= (40.337904,-74.587335)
+    lat, lng=Geocoder.geocode(address)[0].coordinates
     #lat, lng = gmaps.address_to_latlng(address)
     
     radius = '5000'
