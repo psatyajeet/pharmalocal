@@ -42,16 +42,17 @@ def choose_location(request):
     client = TwilioRestClient(account_sid, auth_token)
     
     ids=request.GET.lists()[0][1]
-    referencenum=ids[0]
-    URL= 'https://maps.googleapis.com/maps/api/place/details/json?reference='+ referencenum+ '&sensor=true&key='+ key
-    r=requests.get(URL)
-    r.json()
+    results=[]
+    for id in ids:
     
-    result = simplejson.load(urllib.urlopen(URL))
+        referencenum=id
+        URL= 'https://maps.googleapis.com/maps/api/place/details/json?reference='+ referencenum+ '&sensor=true&key='+ key
+        r=requests.get(URL)
+        r.json()
+        results.append(simplejson.load(urllib.urlopen(URL)))
     #make_call(result['result']['formatted_phone_number'])
-    return HttpResponse(result['result']['formatted_phone_number'])
-    #message = client.sms.messages.create(to=order.phone_number, from_="+19173380736", body=order.medication)
-    #return render_to_response('orders/confirm.html', {'form': form, 'places': places, 'lat': lat, 'lng': lng})
+    #send_text(result['result']['formatted_phone_number'])
+    return render_to_response('orders/confirm.html', {'results': results})
     
 def show_nearby(order):
 
@@ -71,7 +72,6 @@ def show_nearby(order):
     r.json()
     
     result = simplejson.load(urllib.urlopen(URL))
-    print result
     return (result, lat, lng)
 
     
@@ -83,7 +83,17 @@ def make_call(number):
  
     # Make the call
     number="+6099370216"
-    call = client.calls.create(to=number,  # Any phone number
+    call = client.calls.create(to="+19178265606",  # Any phone number
                                from_="+19173380736", # Must be a valid Twilio number
                                url="http://twimlets.com/message?Message%5B0%5D=Are%20you%20from%20Columbia%3F%20If%20yes%20press%201&Message%5B1%5D=Awesome!!%20%20%20")
     print call.sid
+    
+def send_text(number):
+    # Find these values at https://twilio.com/user/account
+    account_sid = "AC4f13c39e2e5b0cf1fd1017be8fd944a7"
+    auth_token = "423fb88dee17931cdb345671ed665069"
+    client = TwilioRestClient(account_sid, auth_token)
+    
+    print number
+    message = client.sms.messages.create(to="+16099370216", from_="+19173380736",
+                                         body="Take it easy boys!")
