@@ -52,8 +52,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
     <tbody>
     {% for place in places.results %} 
     <tr>
-    <td><input type="checkbox" name="place" value={{place.id}}></input></td>
-    <td>{{ place.id }}</td>
+    <td><input type="checkbox" name="place" value={{place.reference}}></input></td>
     <td>{{ place.name }}</td>
     <td>{{ place.vicinity }}</td>
     </tr>
