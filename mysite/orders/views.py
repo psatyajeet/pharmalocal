@@ -22,7 +22,6 @@ def new_prescription(request):
         if form.is_valid():
             order = form.save()
             (places, lat, lng)=show_nearby(order)
-            
             return render_to_response('orders/choose.html', {'form': form, 'places': places, 'lat': lat, 'lng': lng})
         else:
             return render_to_response('orders/new.html', {
@@ -36,16 +35,20 @@ def new_prescription(request):
             'form': form, },context_instance=RequestContext(request))
             
 def choose_location(request):
-    
-    
+    key = 'AIzaSyBOebFrowSFSnB7V4zeNGagd9hTG4ydq8M'
     # Find these values at https://twilio.com/user/account
     account_sid = "AC4f13c39e2e5b0cf1fd1017be8fd944a7"
     auth_token = "423fb88dee17931cdb345671ed665069"
     client = TwilioRestClient(account_sid, auth_token)
     
+    ids=request.GET.lists()[0][1]
+    referencenum=ids[1]
+    URL= 'https://maps.googleapis.com/maps/api/place/details/json?reference='+ referencenum+ '&sensor=true&key='+ key
+    r=requests.get(URL)
+    r.json()
     
-    return HttpResponse(request.GET.lists())
-    
+    result = simplejson.load(urllib.urlopen(URL))
+    return HttpResponse(result['result']['formatted_phone_number'])
     #message = client.sms.messages.create(to=order.phone_number, from_="+19173380736", body=order.medication)
     #return render_to_response('orders/confirm.html', {'form': form, 'places': places, 'lat': lat, 'lng': lng})
     
@@ -59,7 +62,7 @@ def show_nearby(order):
     #lat, lng = gmaps.address_to_latlng(address)
     
     radius = '5000'
-
+    
     URL = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=' + str(lat) + ',' + str(lng) + '&radius=' + radius + '&types=pharmacy&sensor=false&key=' + key
 
     #print URL
@@ -67,7 +70,7 @@ def show_nearby(order):
     r.json()
     
     result = simplejson.load(urllib.urlopen(URL))
- 
+    print result
     return (result, lat, lng)
 
     
