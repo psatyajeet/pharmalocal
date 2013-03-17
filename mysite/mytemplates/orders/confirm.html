@@ -2,11 +2,23 @@
 
 {% block content %}
 
+<h2 class="text-success">Thanks!</h2>
+<h3>We will try to place your order. We will send a confirmation email within 24 hours with the name of the pharmacy and more information on how to pick up your order! </h3>
+<h3>Here is a list of the pharmacies we will try to contact:</h3>
+
+<table class="table">
+<tbody>
 {% for result in results %}
 
-{{ result.result.formatted_phone_number }}
-<br>
+<tr>
+<td>{{ result.result.name}}</td>
+<td>{{ result.result.vicinity }} </td>
+<td>{{ result.result.formatted_phone_number }} </td>
+</tr>
 
 {% endfor %}
+</tbody>
+</table>
 
+<button class="btn"><a href="/">Home</a></button>
 {% endblock %}
