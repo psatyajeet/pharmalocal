@@ -1,4 +1,11 @@
 # Django settings for mysite project.
+import os
+import sys
+
+dbpath = os.path.abspath(os.path.dirname(sys.argv[0])) + '/practicedata'
+
+templatesdir = os.path.abspath(os.path.dirname(sys.argv[0])) + '/mytemplates'
+staticsdir = os.path.abspath(os.path.dirname(sys.argv[0])) + '/static'
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -12,7 +19,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '/Users/satyajeetpal/pharmalocal/mysite/practicedata',             # Or path to database file if using sqlite3.
+        'NAME': dbpath,             # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -62,17 +69,12 @@ STATIC_ROOT = ''
 # Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
 
-import os.path
-PROJECT_DIR = os.path.dirname(__file__) # this is not Django setting.
-
 # Additional locations of static files
 STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    '/Users/satyajeetpal/pharmalocal/mysite/static/',
-    # '/Users/satyajeetpal/Pensieve/mysite/static/',
-    os.path.join(PROJECT_DIR, "static"),
+    staticsdir,
 )
 
 # List of finder classes that know how to find static files in
@@ -113,9 +115,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    '/Users/satyajeetpal/pharmalocal/mysite/mytemplates',
-    # '/Users/satyajeetpal/Pensieve/mysite/mytemplates',
-    os.path.join(PROJECT_DIR, "mytemplates"),
+    templatesdir,
     # here you can add another templates directory if you wish.
 
 )
