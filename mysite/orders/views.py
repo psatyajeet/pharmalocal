@@ -10,7 +10,7 @@ from twilio.rest import TwilioRestClient
 from googlemaps import GoogleMaps
 from pygeocoder import Geocoder
 import simplejson, urllib
-
+#from django.contrib.gis.utils import GeoIP
 import requests
 
 def index(request):
@@ -44,14 +44,12 @@ def choose_location(request):
     ids=request.GET.lists()[0][1]
     results=[]
     for id in ids:
-    
         referencenum=id
         URL= 'https://maps.googleapis.com/maps/api/place/details/json?reference='+ referencenum+ '&sensor=true&key='+ key
         r=requests.get(URL)
         r.json()
         results.append(simplejson.load(urllib.urlopen(URL)))
-    #make_call(result['result']['formatted_phone_number'])
-    #send_text(result['result']['formatted_phone_number'])
+    make_call(results[0]['result']['formatted_phone_number'], form)
     return render_to_response('orders/confirm.html', {'results': results})
     
 def show_nearby(order):
@@ -75,17 +73,20 @@ def show_nearby(order):
     return (result, lat, lng)
 
     
-def make_call(number):
+def make_call(number, form):
     # Get these credentials from http://twilio.com/user/account
     account_sid = "AC4f13c39e2e5b0cf1fd1017be8fd944a7"
     auth_token = "423fb88dee17931cdb345671ed665069"
     client = TwilioRestClient(account_sid, auth_token)
  
     # Make the call
-    number="+6099370216"
-    call = client.calls.create(to="+19178265606",  # Any phone number
+    number="+16099370216"
+    lastname="pal"
+    firstname="john"
+    myurl="http://twimlets.com/menu?Message=this%20is%20a%20call%20from%20pharma%20save.%20the%20customers%20last%20name%20is%20"+ lastname+ "%20and%20the%20first%20name%20is%20"+firstname+".%20The%20order%20date%20is%20April%202nd%202013.%20Press%201%20to%20repeat%20the%20order.%20Press%202%20to%20confirm%20the%20order.%20&Options%5B1%5D=%2FAC4f13c39e2e5b0cf1fd1017be8fd944a7%2Ffirsttry&Options%5B2%5D=%2FAC4f13c39e2e5b0cf1fd1017be8fd944a7%2Fconfirm&"
+    call = client.calls.create(to=number,  # Any phone number
                                from_="+19173380736", # Must be a valid Twilio number
-                               url="http://twimlets.com/message?Message%5B0%5D=Are%20you%20from%20Columbia%3F%20If%20yes%20press%201&Message%5B1%5D=Awesome!!%20%20%20")
+                               url=myurl)
     print call.sid
     
 def send_text(number):
